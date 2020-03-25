@@ -1,13 +1,13 @@
 <?php 
-namespace myscript\lib;
+namespace mw\src\lib;
 
 class FileHandler {
-
+    
     private $fileName;
 
     function __construct(string $fileName) {
 
-        $this->fileName = $fileName;        
+        $this->fileName = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . $fileName;        
     }
 
     private function getHandler()

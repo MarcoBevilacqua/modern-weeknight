@@ -1,12 +1,13 @@
 <?php
 
-namespace myscript;
+namespace mw\src;
 
 include './lib/dataParser.php';
-use myscript\lib\FileHandler;
 include './lib/fileHandler.php';
 
- $file = $_FILES['file_1']['name'];
+use  mw\src\lib\FileHandler;
+
+ $file = $_FILES['mw_file']['name'];
 
  if (!$file) {
    echo "file not found";
@@ -14,77 +15,26 @@ include './lib/fileHandler.php';
  }
 
  $parser = new FileHandler($file);
-
  $lines = $parser->getLines();
 
- var_dump($lines);
+# var_dump($lines);
 
- $regex = '/(?:(?:19|20)[0-9]{2})/';
-
- $regex2 = '/(\d+)\)/';
-
- $regex3 = '/^(in coll.$/';
-//read file lines
- $fileRead = fopen($file, "r") or exit("Unable to open file!");
- //Output a line of the file until the end is reached
- $matches = [];
- $lines;
- $years;
- $entries;
- $yearFound;
- $entryFound;
- $result;
- $count = 0;
- while(!feof($fileRead))
-  {
-    //get the line
-    $line = fgets($fileRead);
-
-    if(strlen(trim($line)) >= 2) {
-      //check for year
-      if(preg_match($regex, $line, $years) ) {
-        $yearFound = $years[0];        
-      }
-
-      //check for ordinal number (e.g. '1)')
-      if(preg_match($regex2, $line, $entries) ) {
-        $entryFound = $entries[0];      
-      }
-
-      //put the found entry into ordinal number at year index
-      if ($yearFound && $entryFound) {
-        #echo "Putting " . $entryFound . "into " . $yearFound . "\n";
-        $purgedLine = str_replace($entryFound, "", $line);
-        $result[$yearFound][] = $purgedLine;
-      }
-      $lines[$count] = $line;
-    }
-    $count++;
-   }
- fclose($fileRead);
-
- if(count($lines) == 0) {
-   die("no lines found");
- }
-
- /*foreach ($lines as $line) {
-   if(preg_match($regex, $line, $matches)) {
-     $years[$matches[0]][] = $line;
-   }
- }*/
- ?>
- <html>
-  <body>
-    <div class="container">
-      <?php
-      foreach ($result as $year => $list) {
-        echo "<h1>" . $year . "</h1><ul style=\"list-style-type:none\" class=\"entries\">"; 
-          foreach ($list as $value) {
-            echo "<li>" . $value . "</li>";
-          }
-          echo "</ul>"; 
-        }
-        ?>        
-    </div>  
-  </body>
- </html>
+ include('../views/template/head.html'); ?>
+  <div class="container">
+  <div class="col text-center"><a href="../index.php" id="saveForm" class="btn btn-outline-secondary" >back</a></div>
+    <table class="table">
+      <thead>
+        <tr class="header-row">
+          <th>#</th>
+          <th class="header-row line">Content</th>
+        </tr>
+      </thead>
+      <tbody>
+        <?php
+          foreach ($lines as $key => $line) {
+            echo '<tr><td>' . ++$key . '</td><td>' . $line . '</td></tr>';
+          } ?>        
+      </tbody>
+    </table>
+  </div>    
+<?php include('../views/template/head.html'); ?> 
