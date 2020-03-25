@@ -12,9 +12,32 @@ class DataParser {
     private $ordinalNumberRegex = '/(\d+)\)/';
     private $authorRegex = '/^(in coll.$/';
 
+    //TODO: inject regex patterns (MAX 2)
     function __construct()
     {
         
+    }
+
+    /**
+     * check if line starts with a number: 
+     * if not it should be attached to previous line 
+     * if first char is number, check starting line patterns (e.g. '1)', '#1')
+     * 
+     * @param string $line
+     * @return boolean
+     */
+    public function shouldAppendLine($line) {    
+
+        //remove starting whitespaces
+        $sanitizedLine = ltrim($line);    
+
+        //check if first char is a string (append)
+        if (!is_numeric(substr($sanitizedLine, 0, 1))) {
+            return true;
+        }        
+
+        //check if number match patterns
+        return !preg_match($this->ordinalNumberRegex, $sanitizedLine);
     }
 
     public function parse(string $line)

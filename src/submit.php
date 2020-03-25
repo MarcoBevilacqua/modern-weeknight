@@ -17,11 +17,8 @@ use  mw\src\lib\FileHandler;
  $parser = new FileHandler($file);
  $lines = $parser->getLines();
 
-# var_dump($lines);
-
  include('../views/template/head.html'); ?>
-  <div class="container">
-  <div class="col text-center"><a href="../index.php" id="saveForm" class="btn btn-outline-secondary" >back</a></div>
+  <div class="container">  
     <table class="table">
       <thead>
         <tr class="header-row">
@@ -36,5 +33,6 @@ use  mw\src\lib\FileHandler;
           } ?>        
       </tbody>
     </table>
+    <div class="col text-center"><a href="../index.php" id="saveForm" class="btn btn-outline-secondary" >back</a></div>
   </div>    
-<?php include('../views/template/head.html'); ?> 
+<?php include('../views/template/footer.html'); ?> 

@@ -1,13 +1,16 @@
 <?php 
 namespace mw\src\lib;
+use mw\lib\DataParser;
 
 class FileHandler {
     
     private $fileName;
+    private $dataParser; 
 
     function __construct(string $fileName) {
 
-        $this->fileName = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . $fileName;        
+        $this->fileName = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'data' . DIRECTORY_SEPARATOR . $fileName;
+        $this->dataParser = new DataParser();         
     }
 
     private function getHandler()
@@ -34,7 +37,7 @@ class FileHandler {
           exit("Cannot get File Handler");  
         }
 
-        $lines;
+        $lines = [];
         $lineCounter = 0;
                 
         while (!feof($fileHandler)) {
@@ -44,23 +47,21 @@ class FileHandler {
             //check if line is not empty
             if(strlen(trim($line)) >= 2) {
 
-                // check if line starts with a number; if not it should be attached to previous line 
-                if (!is_numeric(substr(ltrim($line), 0, 1))) {
-                    $temporaryLine = $lines[$lineCounter-1];
-                    $temporaryLine .= $line;
-                    continue;
+                // check if line should be attached to previous line                 
+                if ($this->dataParser->shouldAppendLine($line)) {
+                    //append content to last line and skip loop
+                    $lines[$lineCounter-1] .= $line;                                        
+                    continue;           
                 }                                
 
                 //put line into array
                 $lines[$lineCounter] = $line;
                 //counter increment            
                 $lineCounter++;
-            }
-            
+            }            
         }
 
         $this->close($fileHandler);
-
         return $lines;
     }
 
