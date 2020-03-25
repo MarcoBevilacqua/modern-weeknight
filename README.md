@@ -1,4 +1,5 @@
-# MarcoBevilacqua-modern-weeknight
+# modern-weeknight
+
 A simple ugly lines parser and beautifier
 
 This project was born for a specific issue in a website restyle. 
